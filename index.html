@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Флипбук Меню</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/page-flip/dist/css/page-flip.browser.min.css">
+  <style>
+    body { margin: 0; background: #111; color: white; font-family: sans-serif; }
+    #container { width: 100vw; height: 100vh; }
+    .navigation {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+    }
+    .arrow {
+      cursor: pointer;
+      font-size: 28px;
+      padding: 0 20px;
+      user-select: none;
+    }
+    .page-num {
+      display: inline-block;
+      padding: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div class="navigation">
+    <span class="arrow" id="prev">&#8592;</span>
+    <span class="page-num" id="page-number">Страница 1</span>
+    <span class="arrow" id="next">&#8594;</span>
+  </div>
+  <script>
+    const pages = [];
+    const totalPages = 30;
+
+    for (let i = 0; i < totalPages; i++) {
+      const num = i.toString().padStart(2, '0');
+      pages.push(`page_${num}.jpg`);
+    }
+
+    const pageFlip = new St.PageFlip(document.getElementById("container"), {
+      width: 600,
+      height: 850,
+      size: "stretch",
+      maxShadowOpacity: 0.5,
+      showCover: true,
+      mobileScrollSupport: false
+    });
+
+    pageFlip.loadFromImages(pages);
+
+    function updatePageNumber() {
+      const currentPage = pageFlip.getCurrentPageIndex() + 1;
+      const pageNumEl = document.getElementById("page-number");
+      pageNumEl.textContent = `Страница ${currentPage} из ${totalPages}`;
+    }
+
+    document.getElementById("prev").onclick = () => pageFlip.flipPrev();
+    document.getElementById("next").onclick = () => pageFlip.flipNext();
+
+    pageFlip.on("flip", updatePageNumber);
+    pageFlip.on("init", updatePageNumber);
+  </script>
+</body>
+</html>
